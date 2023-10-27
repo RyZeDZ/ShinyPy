@@ -1,5 +1,6 @@
 import aiohttp
-import asyncio
+
+from exceptions import Unauthorized, UnknownError
 
 
 class ShinyClient:
@@ -26,16 +27,15 @@ class ShinyClient:
 		await self._session.close()
 	
 
-	async def _format_response(self, response: dict):
-		status_code = response["status_code"]
-		data = response["details"] if "details" in response else response["message"]
-		return (status_code, data)
-	
-
 	async def get_users(self):
 		async with self._session.get(f"{self._url}/api/users") as response:
 			res = await response.json()
-			users = []
-			for user in res["details"]:
-				users.append(user)
-			return users
+			if res["status_code"] == 200:
+				users = []
+				for user in res["details"]:
+					users.append(user)
+				return users
+			elif res["status_code"] == 401 or res["status_code"] == 403:
+				raise Unauthorized(res["message"])
+			else:
+				raise UnknownError("An unknown error occured, please contact an administrator.")

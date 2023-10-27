@@ -52,3 +52,20 @@ class ShinyClient:
 				raise Unauthorized(res["message"])
 			else:
 				raise UnknownError("An unknown error occured, please contact an administrator.")
+	
+
+	async def create_user(self, username: str, email: str, password: str, admin: int = 0):
+		params = {
+			"username": username,
+			"email": email,
+			"password": password,
+			"admin": admin
+		}
+		async with self._session.post(f"{self._url}/api/users", params = params) as response:
+			res = await response.json()
+			if res["status_code"] == 400:
+				raise InvalidDetails(res["message"])
+			elif res["status_code"] == 401:
+				raise Unauthorized(res["message"])	
+			else:
+				print(res)

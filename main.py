@@ -68,4 +68,4 @@ class ShinyClient:
 			elif res["status_code"] == 401:
 				raise Unauthorized(res["message"])	
 			else:
-				print(res)
+				raise UnknownError("An unknown error occured, please contact an administrator.")

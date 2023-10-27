@@ -1,6 +1,6 @@
 import aiohttp
 
-from exceptions import Unauthorized, UnknownError
+from exceptions import Unauthorized, UnknownError, InvalidDetails
 
 
 class ShinyClient:
@@ -36,6 +36,19 @@ class ShinyClient:
 					users.append(user)
 				return users
 			elif res["status_code"] == 401 or res["status_code"] == 403:
+				raise Unauthorized(res["message"])
+			else:
+				raise UnknownError("An unknown error occured, please contact an administrator.")
+	
+
+	async def get_user(self, username: str):
+		async with self._session.get(f"{self._url}/api/users/{username}") as response:
+			res = await response.json()
+			if res["status_code"] == 200:
+				return res["details"]
+			elif res["status_code"] == 400:
+				raise InvalidDetails(res["message"])
+			elif res["status_code"] == 401:
 				raise Unauthorized(res["message"])
 			else:
 				raise UnknownError("An unknown error occured, please contact an administrator.")

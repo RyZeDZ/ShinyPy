@@ -129,3 +129,20 @@ class ShinyClient:
 				return res["details"]
 			else:
 				raise UnknownError("An unknown error occured, please contact an administrator.")
+	
+
+	async def create_database(self, **database_data):
+		params = {}
+		if "name" in database_data: params["name"] = database_data["name"]
+		if "description" in database_data: params["description"] = database_data["description"]
+		if "owner" in database_data: params["owner"] = database_data["owner"]
+		async with self._session.post(f"{self._url}/api/databases", params = params) as response:
+			res = await response.json()
+			if res["status_code"] == 400:
+				raise InvalidDetails(res["message"])
+			elif res["status_code"] == 401:
+				raise Unauthorized(res["message"])
+			elif res["status_code"] == 200:
+				return res["details"]
+			else:
+				raise UnknownError("An unknown error occured, please contact an administrator.")

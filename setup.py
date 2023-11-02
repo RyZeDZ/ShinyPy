@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.0.0a' 
+VERSION = '1.0.1a' 
 DESCRIPTION = 'An API wrapper for ShinyDB'
 LONG_DESCRIPTION = 'Just an API wrapper for ShinyDB server. So cool!'
 requirements = []
@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 # Setting up
 setup(
-        name="ShinyDB", 
+        name="ShinyPy", 
         version=VERSION,
         author="RyZeDZ",
         author_email="<cuzimkamel@gmail.com>",

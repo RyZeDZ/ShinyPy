@@ -1,1 +1,1 @@
-from main import ShinyClient
+from ShinyPy.ShinyCode import ShinyClient

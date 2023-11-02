@@ -39,6 +39,15 @@ class ShinyClient:
 	
 
 	async def get_users(self):
+		"""Get a list of all users.
+
+		Raises:
+			Unauthorized: You are not an admin
+			UnknownError: Any other error the database server raises
+
+		Returns:
+			list or string: Either a list of users or a string
+		"""
 		async with self._session.get(f"{self._url}/api/users") as response:
 			res = await response.json()
 			if res["status_code"] == 200:
@@ -53,12 +62,25 @@ class ShinyClient:
 	
 
 	async def get_user(self, username: str):
+		"""Get a user by username
+
+		Args:
+			username (str): The user you want to get.
+		"""
 		async with self._session.get(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
 			await self.__return_response(res)
 	
 
 	async def create_user(self, username: str, email: str, password: str, admin: int = 0):
+		"""Create a new user
+
+		Args:
+			username (str): The username of the user
+			email (str): The email of the user
+			password (str): THe password of the user
+			admin (int, optional): Whether is the user an admin (1) or not (0). Defaults to 0.
+		"""
 		params = {
 			"username": username,
 			"email": email,
@@ -71,6 +93,16 @@ class ShinyClient:
 	
 
 	async def update_user(self, user: str, **new_data):
+		"""Update the user details
+
+		Args:
+			user (str): The user you want to update
+			username (str, optional): The new username of the user
+			email (str, optional): The new email of the user
+			password (str, optional): The new password of the user
+			key (str, optional): The new key of the user
+			admin (int, optional): hi, idk what to put here
+		"""
 		params = {}
 		if "username" in new_data: params["username"] = new_data["username"]
 		if "email" in new_data: params["email"] = new_data["email"]
@@ -83,24 +115,43 @@ class ShinyClient:
 			
 
 	async def delete_user(self, username: str):
+		"""Delete a user
+
+		Args:
+			username (str): The username of the user you want to delete
+		"""
 		async with self._session.delete(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
 			await self.__return_response(res)
 	
 
 	async def get_databases(self):
+		"""Get all databases owned by you
+		"""
 		async with self._session.get(f"{self._url}/api/databases") as response:
 			res = await response.json()
 			await self.__return_response(res)
 	
 
 	async def get_database(self, database_id: str):
+		"""Get a database by ID
+
+		Args:
+			database_id (str): The ID of the database you want to get
+		"""
 		async with self._session.get(f"{self._url}/api/databases/{database_id}") as response:
 			res = await response.json()
 			await self.__return_response(res)
 	
 
 	async def create_database(self, **database_data):
+		"""Create a new database
+
+		Args:
+			name (str): The name of the database
+			description (str, optional): The description of the database
+			owner (str): The username of the owner of this database
+		"""
 		params = {}
 		if "name" in database_data: params["name"] = database_data["name"]
 		if "description" in database_data: params["description"] = database_data["description"]
@@ -110,7 +161,14 @@ class ShinyClient:
 			await self.__return_response(res)
 	
 
-	async def update_database(self, database_id, **new_data):
+	async def update_database(self, database_id: str, **new_data):
+		"""Update a database
+
+		Args:
+			database_id (str): The ID of the database to update
+			name (str, optional): The new name of the database
+			description (str, optional): The new description of the database
+		"""
 		params = {}
 		if "name" in new_data: params["name"] = new_data["name"]
 		if "description" in new_data: params["description"] = new_data["description"]
@@ -120,6 +178,11 @@ class ShinyClient:
 
 
 	async def delete_database(self, database_id: str):
+		"""Delete a database by ID
+
+		Args:
+			database_id (str): The ID of the database to delete
+		"""
 		params = {
 			"database_id": database_id
 		}
@@ -129,6 +192,12 @@ class ShinyClient:
 	
 
 	async def send_data(self, database_id: str, data: dict):
+		"""Overwrite the old database data with new data
+
+		Args:
+			database_id (str): The ID of the database
+			data (dict): The data you want to put in the database
+		"""
 		async with self._session.post(f"{self._url}/api/databases/{database_id}", json = data) as response:
 			res = await response.json()
 			await self.__return_response(res)

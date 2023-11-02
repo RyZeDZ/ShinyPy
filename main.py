@@ -71,3 +71,22 @@ class ShinyClient:
 				return res["details"]
 			else:
 				raise UnknownError("An unknown error occured, please contact an administrator.")
+	
+
+	async def update_user(self, user: str, **new_data):
+		params = {}
+		if "username" in new_data: params["username"] = new_data["username"]
+		if "email" in new_data: params["email"] = new_data["email"]
+		if "password" in new_data: params["password"] = new_data["password"]
+		if "key" in new_data: params["key"] = new_data["key"]
+		if "admin" in new_data: params["admin"] = new_data["admin"]
+		async with self._session.put(f"{self._url}/api/users/{user}", params = params) as response:
+			res = await response.json()
+			if res["status_code"] == 400:
+				raise InvalidDetails(res["message"])
+			elif res["status_code"] == 401:
+				raise Unauthorized(res["message"])
+			elif res["status_code"] == 200:
+				return res["details"]
+			else:
+				raise UnknownError("An unknown error occured, please contact an administrator.")

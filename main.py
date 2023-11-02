@@ -19,6 +19,17 @@ class ShinyClient:
 		self._session = aiohttp.ClientSession(headers = self._headers)
 	
 
+	async def __return_response(res):
+		if res["status_code"] == 200:
+			return res["details"]
+		elif res["status_code"] == 400:
+			raise InvalidDetails(res["message"])
+		elif res["status_code"] == 401:
+			raise Unauthorized(res["message"])
+		else:
+			raise UnknownError("An unknown error occured, please contact an administrator.")
+
+
 	async def close(self):
 		"""
 		Close the session. This is a coroutine. 
@@ -44,14 +55,7 @@ class ShinyClient:
 	async def get_user(self, username: str):
 		async with self._session.get(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
-			if res["status_code"] == 200:
-				return res["details"]
-			elif res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def create_user(self, username: str, email: str, password: str, admin: int = 0):
@@ -63,14 +67,7 @@ class ShinyClient:
 		}
 		async with self._session.post(f"{self._url}/api/users", params = params) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])	
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def update_user(self, user: str, **new_data):
@@ -82,53 +79,25 @@ class ShinyClient:
 		if "admin" in new_data: params["admin"] = new_data["admin"]
 		async with self._session.put(f"{self._url}/api/users/{user}", params = params) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 			
 
 	async def delete_user(self, username: str):
 		async with self._session.delete(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def get_databases(self):
 		async with self._session.get(f"{self._url}/api/databases") as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def get_database(self, database_id: str):
 		async with self._session.get(f"{self._url}/api/databases/{database_id}") as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def create_database(self, **database_data):
@@ -138,14 +107,7 @@ class ShinyClient:
 		if "owner" in database_data: params["owner"] = database_data["owner"]
 		async with self._session.post(f"{self._url}/api/databases", params = params) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def update_database(self, database_id, **new_data):
@@ -154,14 +116,7 @@ class ShinyClient:
 		if "description" in new_data: params["description"] = new_data["description"]
 		async with self._session.put(f"{self._url}/api/databases/{database_id}", params = params) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 
 
 	async def delete_database(self, database_id: str):
@@ -170,24 +125,10 @@ class ShinyClient:
 		}
 		async with self._session.delete(f"{self._url}/api/databases", params = params) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)
 	
 
 	async def send_data(self, database_id: str, data: dict):
 		async with self._session.post(f"{self._url}/api/databases/{database_id}", json = data) as response:
 			res = await response.json()
-			if res["status_code"] == 400:
-				raise InvalidDetails(res["message"])
-			elif res["status_code"] == 401:
-				raise Unauthorized(res["message"])
-			elif res["status_code"] == 200:
-				return res["details"]
-			else:
-				raise UnknownError("An unknown error occured, please contact an administrator.")
+			await self.__return_response(res)

@@ -91,8 +91,22 @@ class ShinyClient:
 			else:
 				raise UnknownError("An unknown error occured, please contact an administrator.")
 			
+
 	async def delete_user(self, username: str):
 		async with self._session.delete(f"{self._url}/api/users/{username}") as response:
+			res = await response.json()
+			if res["status_code"] == 400:
+				raise InvalidDetails(res["message"])
+			elif res["status_code"] == 401:
+				raise Unauthorized(res["message"])
+			elif res["status_code"] == 200:
+				return res["details"]
+			else:
+				raise UnknownError("An unknown error occured, please contact an administrator.")
+	
+
+	async def get_databases(self):
+		async with self._session.get(f"{self._url}/api/databases") as response:
 			res = await response.json()
 			if res["status_code"] == 400:
 				raise InvalidDetails(res["message"])

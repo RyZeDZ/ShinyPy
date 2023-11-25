@@ -19,7 +19,7 @@ class ShinyClient:
 		self._session = aiohttp.ClientSession(headers = self._headers)
 	
 
-	async def __return_response(res):
+	async def __return_response(self, res):
 		if res["status_code"] == 200:
 			return res["details"]
 		elif res["status_code"] == 400:

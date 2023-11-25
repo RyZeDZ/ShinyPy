@@ -1,3 +1,13 @@
+# ShinyPy/ShinyCode.py
+"""Seamlessly connect and use ShinyDB!
+
+Examples: 
+	>>> from ShinyPy import ShinyClient
+	>>> client = ShinyClient(key = 'secret', host = '0.0.0.0', port = 5000)
+	>>> databases = await client.get_databases()
+	>>> print(databases)
+"""
+
 import aiohttp
 
 from .exceptions import Unauthorized, UnknownError, InvalidDetails
@@ -33,7 +43,9 @@ class ShinyClient:
 	async def close(self):
 		"""
 		Close the session. This is a coroutine. 
-		Raises asyncio.TimeoutError if the session cannot be closed
+
+		Raises: 
+			asyncio.TimeoutError if the session cannot be closed
 		"""
 		await self._session.close()
 	
@@ -69,7 +81,8 @@ class ShinyClient:
 		"""
 		async with self._session.get(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def create_user(self, username: str, email: str, password: str, admin: int = 0):
@@ -89,7 +102,8 @@ class ShinyClient:
 		}
 		async with self._session.post(f"{self._url}/api/users", params = params) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def update_user(self, user: str, **new_data):
@@ -111,7 +125,8 @@ class ShinyClient:
 		if "admin" in new_data: params["admin"] = new_data["admin"]
 		async with self._session.put(f"{self._url}/api/users/{user}", params = params) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 			
 
 	async def delete_user(self, username: str):
@@ -122,7 +137,8 @@ class ShinyClient:
 		"""
 		async with self._session.delete(f"{self._url}/api/users/{username}") as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def get_databases(self):
@@ -130,7 +146,8 @@ class ShinyClient:
 		"""
 		async with self._session.get(f"{self._url}/api/databases") as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def get_database(self, database_id: str):
@@ -141,8 +158,9 @@ class ShinyClient:
 		"""
 		async with self._session.get(f"{self._url}/api/databases/{database_id}") as response:
 			res = await response.json()
-			await self.__return_response(res)
-	
+			data = await self.__return_response(res)
+			return data
+		
 
 	async def create_database(self, **database_data):
 		"""Create a new database
@@ -158,7 +176,8 @@ class ShinyClient:
 		if "owner" in database_data: params["owner"] = database_data["owner"]
 		async with self._session.post(f"{self._url}/api/databases", params = params) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def update_database(self, database_id: str, **new_data):
@@ -174,7 +193,8 @@ class ShinyClient:
 		if "description" in new_data: params["description"] = new_data["description"]
 		async with self._session.put(f"{self._url}/api/databases/{database_id}", params = params) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 
 
 	async def delete_database(self, database_id: str):
@@ -188,7 +208,8 @@ class ShinyClient:
 		}
 		async with self._session.delete(f"{self._url}/api/databases", params = params) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data
 	
 
 	async def send_data(self, database_id: str, data: dict):
@@ -200,4 +221,5 @@ class ShinyClient:
 		"""
 		async with self._session.post(f"{self._url}/api/databases/{database_id}", json = data) as response:
 			res = await response.json()
-			await self.__return_response(res)
+			data = await self.__return_response(res)
+			return data

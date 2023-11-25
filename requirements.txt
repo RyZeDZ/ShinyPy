@@ -1,1 +1,4 @@
 aiohttp
+mkdocs
+"mkdocstrings[python]"
+mkdocs-material

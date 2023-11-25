@@ -6,6 +6,8 @@ Examples:
 	>>> client = ShinyClient(key = 'secret', host = '0.0.0.0', port = 5000)
 	>>> databases = await client.get_databases()
 	>>> print(databases)
+	['aIYuvV', 'rHWU8a', 'dcboQq']
+
 """
 
 import aiohttp
@@ -45,7 +47,7 @@ class ShinyClient:
 		Close the session. This is a coroutine. 
 
 		Raises: 
-			asyncio.TimeoutError if the session cannot be closed
+			asyncio.TimeoutError: if the session cannot be closed
 		"""
 		await self._session.close()
 	

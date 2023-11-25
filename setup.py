@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.0.1a' 
+VERSION = '1.0.2a' 
 DESCRIPTION = 'An API wrapper for ShinyDB'
 LONG_DESCRIPTION = 'Just an API wrapper for ShinyDB server. So cool!'
 requirements = []

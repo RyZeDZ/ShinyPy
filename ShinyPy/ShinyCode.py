@@ -1,6 +1,6 @@
 import aiohttp
 
-from exceptions import Unauthorized, UnknownError, InvalidDetails
+from .exceptions import Unauthorized, UnknownError, InvalidDetails
 
 
 class ShinyClient:

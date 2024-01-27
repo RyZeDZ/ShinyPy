@@ -8,10 +8,10 @@ import asyncio
 
 
 async def main():
-	client = ShinyClient("API-KEY")
+	client = ShinyClient(key = "API-KEY")
 	user = await client.get_user("RyZe")
-	await client.close()
 	print(user)
+	await client.close()
 
 
 asyncio.run(main())

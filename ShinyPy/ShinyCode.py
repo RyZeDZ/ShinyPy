@@ -3,7 +3,7 @@
 
 Examples: 
 	>>> from ShinyPy import ShinyClient
-	>>> client = ShinyClient(key = 'secret', host = '0.0.0.0', port = 5000)
+	>>> client = ShinyClient(key = 'secret')
 	>>> databases = await client.get_databases()
 	>>> print(databases)
 	['aIYuvV', 'rHWU8a', 'dcboQq']
@@ -16,13 +16,13 @@ from .exceptions import Unauthorized, UnknownError, InvalidDetails
 
 
 class ShinyClient:
-	def __init__(self, key: str, host: str = "0.0.0.0", port: int = None, ssl: bool = False):
+	def __init__(self, key: str, host: str = "0.0.0.0", port: int = None, ssl: bool = True):
 		"""
 		 Initialize the connection to ShinyDB. This is the entry point for the ShinyClient instance.
 		 
 		 Args:
 		 	 key: The key to use for authenticating the connection.
-		 	 host: The host to connect to. If not specified the default is " 0. 0. 0. 0 ".
+		 	 host: The host to connect to. If not specified the default is "0.0.0.0".
 		 	 port: The port to connect to. If not specified the default is None.
 		 	 ssl: Whether to use HTTPS or HTTP. Default is False
 		"""

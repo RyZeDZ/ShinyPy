@@ -26,7 +26,7 @@ class ShinyClient:
 		 	 port: The port to connect to. If not specified the default is None.
 		 	 ssl: Whether to use HTTPS or HTTP. Default is False
 		"""
-		self._url = f"http{('' if ssl == False else 's')}://{host}:{('' if port == False else f'{port}')}"
+		self._url = f"http{('' if ssl == False else 's')}://{host}:{('' if port == None else f'{port}')}"
 		self._headers = {"content-type": "application/json", "KEY": key}
 		self._session = aiohttp.ClientSession(headers = self._headers)
 	
